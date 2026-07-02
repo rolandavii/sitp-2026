@@ -1,0 +1,1433 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SITP — Sisters of Mary School–Adlas, Inc.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+  /* ═══════════════════════════════════════════════
+     DESIGN TOKENS
+  ═══════════════════════════════════════════════ */
+  :root {
+    --teal:        #008080;
+    --teal-dark:   #005F5F;
+    --teal-light:  #E0F4F4;
+    --teal-mid:    #00A3A3;
+    --navy:        #0B2545;
+    --navy-light:  #163878;
+    --gold:        #C9973A;
+    --gold-pale:   #FDF6E8;
+    --white:       #FFFFFF;
+    --bg:          #F0F7F7;
+    --card:        #FFFFFF;
+    --border:      #CBE8E8;
+    --text:        #1A202C;
+    --muted:       #5A7070;
+    --light:       #9CB8B8;
+    --green:       #166534;
+    --green-bg:    #DCFCE7;
+    --red:         #991B1B;
+    --red-bg:      #FEE2E2;
+    --amber:       #92400E;
+    --amber-bg:    #FEF3C7;
+    --blue:        #1E40AF;
+    --blue-bg:     #DBEAFE;
+    --radius:      12px;
+    --radius-sm:   8px;
+    --shadow:      0 1px 3px rgba(0,128,128,.08), 0 4px 20px rgba(0,128,128,.06);
+    --shadow-lg:   0 8px 40px rgba(0,0,0,.13);
+  }
+
+  /* ═══════════════════════════════════════════════
+     RESET & BASE
+  ═══════════════════════════════════════════════ */
+  *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+  h1, h2, h3, h4, h5, h6, 
+  .hero-title, .brand-name, .login-form-title, .lpl-title, .dash-page-title, .vm-title, .vm-success-title {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  .font-mono, code, pre, .otp-input, .su-logout, .verified-banner {
+    font-family: 'JetBrains Mono', monospace;
+  }
+  button { font-family: inherit; }
+  input, select, textarea { font-family: inherit; }
+
+  /* ═══════════════════════════════════════════════
+     PAGE SYSTEM — only one .page-screen visible at a time
+  ═══════════════════════════════════════════════ */
+  .page-screen { display: none; min-height: 100vh; flex-direction: column; }
+  .page-screen.active { display: flex; }
+
+  /* ═══════════════════════════════════════════════
+     HOMEPAGE
+  ═══════════════════════════════════════════════ */
+  .home-header {
+    background: var(--navy);
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-logo {
+    width: 40px; height: 40px;
+    background: var(--teal);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 13px; color: #fff;
+    letter-spacing: -.5px; flex-shrink: 0;
+  }
+  .brand-name { color: #fff; font-size: 14px; font-weight: 700; letter-spacing: .01em; line-height: 1.2; }
+  .brand-name span { display: block; font-size: 11px; font-weight: 400; opacity: .55; }
+  .lang-switch {
+    display: flex; border: 1.5px solid rgba(255,255,255,.2);
+    border-radius: 7px; overflow: hidden;
+  }
+  .lang-btn {
+    background: none; border: none; color: rgba(255,255,255,.5);
+    font-size: 11px; font-weight: 700; padding: 5px 11px;
+    cursor: pointer; transition: all .15s; letter-spacing: .05em;
+  }
+  .lang-btn.active { background: var(--teal); color: #fff; }
+
+  /* HERO */
+  .home-hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #0D3060 50%, var(--teal-dark) 100%);
+    padding: 72px 32px 80px;
+    text-align: center;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .home-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 70% 50%, rgba(0,160,160,.18) 0%, transparent 65%);
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    border: 1.5px solid rgba(0,200,200,.4);
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-size: 11px; font-weight: 700; letter-spacing: .1em;
+    color: var(--teal-mid); text-transform: uppercase;
+    margin-bottom: 22px; position: relative;
+  }
+  .hero-title {
+    font-size: clamp(28px, 5vw, 48px);
+    font-weight: 900; line-height: 1.08;
+    letter-spacing: -.02em;
+    margin-bottom: 16px; position: relative;
+  }
+  .hero-title em { color: var(--teal-mid); font-style: normal; }
+  .hero-subtitle {
+    font-size: 16px; opacity: .7; max-width: 520px;
+    margin: 0 auto 48px; position: relative;
+  }
+  .hero-notice {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px; padding: 10px 18px;
+    font-size: 12.5px; color: rgba(255,255,255,.6);
+    position: relative;
+  }
+  .hero-notice strong { color: var(--teal-mid); }
+
+  /* PORTAL ENTRY CARDS */
+  .portal-section {
+    padding: 56px 24px;
+    max-width: 960px; margin: 0 auto; width: 100%;
+  }
+  .portal-section-title {
+    text-align: center;
+    font-size: 13px; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--teal-dark);
+    margin-bottom: 32px;
+  }
+  .portal-cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  @media(max-width:700px){ .portal-cards { grid-template-columns: 1fr; } }
+
+  .portal-card {
+    background: var(--card);
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    padding: 32px 24px;
+    text-align: center;
+    cursor: pointer;
+    transition: all .2s;
+    box-shadow: var(--shadow);
+    position: relative; overflow: hidden;
+  }
+  .portal-card::after {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; height: 3px;
+    background: var(--teal); transform: scaleX(0); transition: transform .2s;
+  }
+  .portal-card:hover { border-color: var(--teal); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+  .portal-card:hover::after { transform: scaleX(1); }
+  .portal-card.admin-card { background: var(--navy); border-color: var(--navy); }
+  .portal-card.admin-card:hover { border-color: var(--teal-mid); }
+  .portal-card.admin-card .pc-icon { background: rgba(255,255,255,.1); }
+  .portal-card.admin-card .pc-title { color: #fff; }
+  .portal-card.admin-card .pc-desc { color: rgba(255,255,255,.55); }
+  .portal-card.admin-card .pc-action { background: var(--teal); color: #fff; border-color: var(--teal); }
+  .pc-icon {
+    width: 60px; height: 60px; border-radius: 16px;
+    background: var(--teal-light);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px; margin: 0 auto 18px;
+  }
+  .pc-title { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .pc-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 24px; }
+  .pc-action {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: var(--teal-light); color: var(--teal-dark);
+    border: 1.5px solid var(--teal); border-radius: var(--radius-sm);
+    padding: 9px 20px; font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all .15s; width: 100%; justify-content: center;
+  }
+  .pc-action:hover { background: var(--teal); color: #fff; }
+
+  /* FEATURE LIST */
+  .feature-strip {
+    background: var(--teal-light);
+    border-top: 1px solid var(--border);
+    padding: 28px 24px;
+  }
+  .feature-strip-inner {
+    max-width: 960px; margin: 0 auto;
+    display: flex; flex-wrap: wrap; gap: 20px 36px;
+    justify-content: center;
+  }
+  .feature-item {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; color: var(--teal-dark); font-weight: 600;
+  }
+  .feature-item span { font-size: 16px; }
+
+  /* HOME FOOTER */
+  .home-footer {
+    background: var(--navy); color: rgba(255,255,255,.4);
+    text-align: center; font-size: 12px; padding: 20px;
+    margin-top: auto;
+  }
+
+  /* ═══════════════════════════════════════════════
+     LOGIN PAGES (shared)
+  ═══════════════════════════════════════════════ */
+  .login-layout {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    min-height: 100vh;
+  }
+  @media(max-width: 768px) { .login-layout { grid-template-columns: 1fr; } }
+
+  .login-panel-left {
+    background: linear-gradient(155deg, var(--navy) 0%, var(--teal-dark) 100%);
+    padding: 48px 40px;
+    display: flex; flex-direction: column; justify-content: center;
+    color: #fff;
+  }
+  .login-panel-left .back-btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,.1); border: none; border-radius: 7px;
+    color: rgba(255,255,255,.7); font-size: 13px; font-weight: 600;
+    padding: 8px 14px; cursor: pointer; margin-bottom: 48px;
+    transition: background .15s;
+  }
+  .login-panel-left .back-btn:hover { background: rgba(255,255,255,.18); }
+  .lpl-eyebrow {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--teal-mid); margin-bottom: 14px;
+  }
+  .lpl-title { font-size: 32px; font-weight: 900; line-height: 1.1; margin-bottom: 12px; }
+  .lpl-desc { font-size: 14px; opacity: .65; line-height: 1.7; margin-bottom: 36px; }
+  .lpl-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 8px; padding: 10px 16px; font-size: 12.5px; color: rgba(255,255,255,.6);
+  }
+  @media(max-width:768px){ .login-panel-left { display: none; } }
+
+  .login-panel-right {
+    background: var(--white);
+    padding: 48px 40px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .login-form-title { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .login-form-sub { font-size: 13px; color: var(--muted); margin-bottom: 32px; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: 12px; font-weight: 700; color: var(--navy); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 7px; }
+  .form-input {
+    width: 100%; border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm); padding: 11px 14px;
+    font-size: 14px; color: var(--text); outline: none;
+    transition: border-color .15s;
+  }
+  .form-input:focus { border-color: var(--teal); }
+  .form-input::placeholder { color: var(--light); }
+  .form-btn {
+    width: 100%; background: var(--teal-dark);
+    color: #fff; border: none; border-radius: var(--radius-sm);
+    padding: 13px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: background .15s; margin-top: 6px;
+  }
+  .form-btn:hover { background: var(--teal); }
+  .form-btn.secondary {
+    background: none; color: var(--muted);
+    border: 1.5px solid var(--border); margin-top: 10px;
+  }
+  .form-btn.secondary:hover { border-color: var(--teal); color: var(--teal-dark); }
+  .form-error {
+    background: var(--red-bg); color: var(--red); border-radius: 7px;
+    padding: 10px 14px; font-size: 13px; margin-bottom: 16px; display: none;
+  }
+  .form-divider {
+    text-align: center; font-size: 12px; color: var(--light);
+    margin: 20px 0; position: relative;
+  }
+  .form-divider::before, .form-divider::after {
+    content: ''; position: absolute; top: 50%;
+    width: 42%; height: 1px; background: var(--border);
+  }
+  .form-divider::before { left: 0; }
+  .form-divider::after { right: 0; }
+
+  /* Security OTP */
+  .otp-grid { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+  .otp-input {
+    width: 52px; height: 60px; border: 2px solid var(--border);
+    border-radius: 10px; text-align: center;
+    font-size: 24px; font-weight: 700; color: var(--navy);
+    outline: none; transition: border-color .15s;
+  }
+  .otp-input:focus { border-color: var(--teal); }
+  .otp-note { text-align: center; font-size: 12.5px; color: var(--muted); margin-bottom: 16px; }
+
+  /* ═══════════════════════════════════════════════
+     DASHBOARD SHARED (Employee + Admin)
+  ═══════════════════════════════════════════════ */
+  .dash-layout { display: flex; flex: 1; min-height: 100vh; }
+
+  /* Sidebar */
+  .dash-sidebar {
+    width: 220px; flex-shrink: 0;
+    background: var(--navy);
+    display: flex; flex-direction: column;
+    padding: 0 0 24px;
+  }
+  .sidebar-brand {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    margin-bottom: 12px;
+  }
+  .sidebar-brand .sb-logo {
+    width: 34px; height: 34px; border-radius: 8px;
+    background: var(--teal); display: flex; align-items: center;
+    justify-content: center; font-weight: 900; font-size: 12px; color: #fff;
+    margin-bottom: 8px;
+  }
+  .sidebar-brand .sb-name { font-size: 12px; font-weight: 700; color: #fff; line-height: 1.3; }
+  .sidebar-brand .sb-role {
+    display: inline-block; margin-top: 5px;
+    background: var(--teal); border-radius: 4px;
+    padding: 2px 8px; font-size: 10px; font-weight: 700;
+    color: #fff; letter-spacing: .05em; text-transform: uppercase;
+  }
+  .sidebar-nav { flex: 1; padding: 0 12px; }
+  .nav-section-label {
+    font-size: 9px; font-weight: 700; letter-spacing: .14em;
+    text-transform: uppercase; color: rgba(255,255,255,.3);
+    padding: 14px 8px 6px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 10px; border-radius: 8px;
+    color: rgba(255,255,255,.6); font-size: 13px; font-weight: 500;
+    cursor: pointer; transition: all .15s; margin-bottom: 2px;
+    border: none; background: none; width: 100%; text-align: left;
+  }
+  .nav-item:hover { background: rgba(255,255,255,.08); color: #fff; }
+  .nav-item.active { background: var(--teal-dark); color: #fff; font-weight: 600; }
+  .nav-item .ni-icon { font-size: 15px; flex-shrink: 0; }
+  .sidebar-bottom { padding: 0 12px; }
+  .sidebar-user {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 10px; border-top: 1px solid rgba(255,255,255,.08);
+    margin-top: 8px;
+  }
+  .su-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--teal); color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .su-name { font-size: 12px; font-weight: 600; color: #fff; line-height: 1.3; }
+  .su-dept { font-size: 11px; color: rgba(255,255,255,.45); }
+  .su-logout {
+    margin-left: auto; background: none; border: none;
+    color: rgba(255,255,255,.35); cursor: pointer; font-size: 14px;
+    transition: color .15s; padding: 4px;
+  }
+  .su-logout:hover { color: #fff; }
+
+  /* Main content */
+  .dash-main {
+    flex: 1; min-width: 0;
+    background: var(--bg);
+    display: flex; flex-direction: column;
+  }
+  .dash-topbar {
+    background: var(--white); border-bottom: 1px solid var(--border);
+    padding: 0 28px; height: 60px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+  }
+  .dash-page-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-lang { display: flex; border: 1.5px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .topbar-lang button {
+    background: none; border: none; font-size: 11px; font-weight: 700;
+    padding: 4px 10px; cursor: pointer; color: var(--muted);
+    transition: all .12s;
+  }
+  .topbar-lang button.active { background: var(--teal); color: #fff; }
+  .pub-tag {
+    background: var(--green-bg); color: var(--green);
+    border-radius: 6px; padding: 3px 10px;
+    font-size: 11px; font-weight: 700; letter-spacing: .03em;
+  }
+  .dash-content { flex: 1; padding: 28px; overflow-y: auto; }
+
+  /* ═══════════════════════════════════════════════
+     EMPLOYEE DASHBOARD WIDGETS
+  ═══════════════════════════════════════════════ */
+  .emp-pub-notice {
+    background: linear-gradient(135deg, var(--teal-dark) 0%, var(--navy) 100%);
+    border-radius: var(--radius); padding: 16px 20px;
+    display: flex; align-items: center; gap: 14px;
+    color: #fff; margin-bottom: 20px; box-shadow: var(--shadow);
+  }
+  .epn-icon { font-size: 22px; flex-shrink: 0; }
+  .epn-body { flex: 1; }
+  .epn-title { font-size: 13px; font-weight: 700; color: var(--teal-mid); letter-spacing: .04em; text-transform: uppercase; margin-bottom: 3px; }
+  .epn-meta { font-size: 12.5px; opacity: .7; }
+  .epn-badge {
+    background: rgba(0,200,180,.2); border: 1px solid rgba(0,200,180,.35);
+    border-radius: 6px; padding: 3px 11px;
+    font-size: 11px; font-weight: 700; color: var(--teal-mid); white-space: nowrap;
+  }
+
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 14px; margin-bottom: 20px;
+  }
+  @media(max-width:600px){ .summary-grid { grid-template-columns: 1fr 1fr; } }
+  .sum-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .sum-card.net-card { background: var(--navy); border-color: var(--navy); }
+  .sum-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+  .net-card .sum-label { color: rgba(255,255,255,.5); }
+  .sum-val { font-size: 22px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .net-card .sum-val { color: var(--gold); font-size: 26px; }
+  .sum-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .net-card .sum-sub { color: rgba(255,255,255,.4); }
+
+  .dash-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); box-shadow: var(--shadow);
+    overflow: hidden; margin-bottom: 18px;
+  }
+  .dc-head {
+    padding: 14px 20px; border-bottom: 1px solid var(--border);
+    background: #F7FBFB;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .dc-head-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+  .dc-head-action {
+    font-size: 12px; font-weight: 600; color: var(--teal-dark);
+    background: none; border: 1px solid var(--border); border-radius: 6px;
+    padding: 4px 12px; cursor: pointer; transition: all .12s;
+  }
+  .dc-head-action:hover { background: var(--teal-light); border-color: var(--teal); }
+
+  /* Payslip rows */
+  .ps-line {
+    display: grid; grid-template-columns: 1fr auto;
+    padding: 11px 20px; border-bottom: 1px solid #F0F7F7;
+    align-items: center; gap: 12px; cursor: pointer;
+    transition: background .1s;
+  }
+  .ps-line:last-child { border-bottom: none; }
+  .ps-line:hover { background: #F7FBFB; }
+  .ps-line-label { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+  .ps-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+  .earn-dot { background: #22C55E; }
+  .ded-dot { background: #F97316; }
+  .credit-dot { background: #3B82F6; }
+  .ps-amount { font-size: 14px; font-weight: 700; }
+  .earn-amt { color: var(--green); }
+  .ded-amt { color: var(--red); }
+  .credit-amt { color: var(--blue); }
+  .info-pill {
+    background: none; border: 1.5px solid var(--border);
+    border-radius: 50%; width: 18px; height: 18px;
+    font-size: 10px; color: var(--light); cursor: pointer;
+    display: inline-flex; align-items: center; justify-content: center;
+    transition: all .12s; flex-shrink: 0; margin-left: 6px;
+  }
+  .info-pill:hover { border-color: var(--teal); color: var(--teal-dark); }
+
+  /* Evidence drawer */
+  .ev-drawer {
+    display: none; border-top: 1px solid var(--border);
+    background: #F0F9F9; padding: 14px 20px;
+    font-size: 13px; line-height: 1.7; color: var(--muted);
+    border-left: 4px solid var(--teal);
+  }
+  .ev-drawer.open { display: block; }
+  .ev-tag {
+    font-size: 10px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; color: var(--teal-dark); margin-bottom: 6px;
+  }
+  .ev-detail { display: grid; grid-template-columns: 140px 1fr; gap: 4px 12px; }
+  .ev-detail-key { color: var(--muted); font-size: 12.5px; }
+  .ev-detail-val { font-weight: 600; color: var(--text); font-size: 12.5px; }
+  .ev-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    border-radius: 5px; padding: 3px 9px; font-size: 11px; font-weight: 700;
+    margin-top: 10px;
+  }
+  .ev-badge.verified { background: var(--green-bg); color: var(--green); }
+  .ev-badge.deduct { background: var(--red-bg); color: var(--red); }
+  .ev-badge.credit { background: var(--blue-bg); color: var(--blue); }
+
+  /* Signature block */
+  .sig-block {
+    border-top: 1px solid var(--border); padding: 16px 20px;
+    background: #FAFCFC;
+  }
+  .sig-title { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 12px; }
+  .sig-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+  @media(max-width:500px){ .sig-grid { grid-template-columns: 1fr 1fr; } }
+  .sig-role { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--light); margin-bottom: 2px; }
+  .sig-line { border-bottom: 1.5px solid var(--border); height: 28px; margin-bottom: 3px; font-size: 14px; font-family: Georgia, serif; font-style: italic; color: var(--navy); display: flex; align-items: flex-end; padding-bottom: 2px; }
+  .sig-name { font-size: 12.5px; font-weight: 600; color: var(--navy); }
+  .sig-date { font-size: 11px; color: var(--muted); }
+  .verified-banner {
+    margin-top: 14px; background: var(--green-bg);
+    border-radius: 7px; padding: 9px 14px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 12px; font-weight: 600; color: var(--green);
+  }
+  .verified-banner span { font-weight: 400; opacity: .7; }
+
+  /* Net pay row */
+  .net-row {
+    display: grid; grid-template-columns: 1fr auto;
+    padding: 16px 20px; background: var(--navy);
+    align-items: center; gap: 12px;
+  }
+  .net-row-label { font-size: 15px; font-weight: 700; color: #fff; }
+  .net-row-label span { display: block; font-size: 11px; font-weight: 400; color: rgba(255,255,255,.45); margin-top: 2px; }
+  .net-row-amount { font-size: 24px; font-weight: 900; color: var(--gold); }
+
+  /* Total row */
+  .total-row {
+    display: grid; grid-template-columns: 1fr auto;
+    padding: 10px 20px; gap: 12px; align-items: center;
+  }
+
+  /* History rows */
+  .hist-row {
+    display: grid; grid-template-columns: 1fr auto auto;
+    padding: 12px 20px; border-bottom: 1px solid #F0F7F7;
+    gap: 14px; align-items: center;
+    cursor: pointer; transition: background .1s;
+  }
+  .hist-row:last-child { border-bottom: none; }
+  .hist-row:hover { background: #F7FBFB; }
+  .hist-period { font-size: 14px; font-weight: 500; }
+  .hist-period span { display: block; font-size: 12px; color: var(--muted); }
+  .hist-amount { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+  .badge-pub { background: var(--green-bg); color: var(--green); }
+  .badge-curr { background: var(--amber-bg); color: var(--amber); }
+
+  /* Gov contribution cards */
+  .gov-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 18px; }
+  @media(max-width:600px){ .gov-grid { grid-template-columns: 1fr; } }
+  .gov-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .gov-icon { font-size: 22px; margin-bottom: 8px; }
+  .gov-name { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 2px; }
+  .gov-tag { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .gov-desc { font-size: 12.5px; color: var(--muted); line-height: 1.6; }
+  .gov-divider { border: none; border-top: 1px solid var(--border); margin: 10px 0; }
+  .gov-benefit { font-size: 12px; color: var(--green); font-weight: 500; }
+
+  /* FAQ */
+  .faq-item { border-bottom: 1px solid var(--border); }
+  .faq-item:last-child { border-bottom: none; }
+  .faq-q {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 13px 20px; cursor: pointer; font-size: 14px; font-weight: 500;
+    gap: 12px; user-select: none; transition: background .1s;
+  }
+  .faq-q:hover { background: #F7FBFB; }
+  .faq-chevron { font-size: 18px; color: var(--light); transition: transform .2s; display: inline-block; }
+  .faq-item.open .faq-chevron { transform: rotate(180deg); }
+  .faq-ans { display: none; padding: 4px 20px 14px; font-size: 14px; color: var(--muted); line-height: 1.7; border-top: 1px solid #F0F7F7; }
+  .faq-item.open .faq-ans { display: block; }
+
+  /* ═══════════════════════════════════════════════
+     ADMIN DASHBOARD
+  ═══════════════════════════════════════════════ */
+  .admin-stat-grid {
+    display: grid; grid-template-columns: repeat(4,1fr);
+    gap: 14px; margin-bottom: 20px;
+  }
+  @media(max-width:800px){ .admin-stat-grid { grid-template-columns: repeat(2,1fr); } }
+  .admin-stat {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 18px 20px; box-shadow: var(--shadow);
+  }
+  .as-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; }
+  .as-val { font-size: 28px; font-weight: 900; color: var(--navy); line-height: 1; }
+  .as-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+  .as-val.teal { color: var(--teal-dark); }
+  .as-val.green { color: var(--green); }
+  .as-val.amber { color: var(--amber); }
+
+  /* Employee list table */
+  .emp-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .emp-table th {
+    text-align: left; padding: 10px 16px;
+    font-size: 11px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; color: var(--muted);
+    border-bottom: 1px solid var(--border); background: #F7FBFB;
+  }
+  .emp-table td { padding: 13px 16px; border-bottom: 1px solid #F0F7F7; vertical-align: middle; }
+  .emp-table tr:last-child td { border-bottom: none; }
+  .emp-table tr:hover td { background: #F7FBFB; }
+  .emp-avatar {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: var(--teal-light); color: var(--teal-dark);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700; flex-shrink: 0;
+  }
+  .emp-name-cell { display: flex; align-items: center; gap: 10px; }
+  .emp-name-text { font-weight: 600; color: var(--navy); }
+  .emp-id { font-size: 11px; color: var(--muted); }
+  .tbl-badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; }
+  .tbl-badge.tp { background: var(--teal-light); color: var(--teal-dark); }
+  .tbl-badge.ntp { background: var(--amber-bg); color: var(--amber); }
+  .tbl-badge.pub { background: var(--green-bg); color: var(--green); }
+  .tbl-badge.draft { background: #F1F5F9; color: var(--muted); }
+  .tbl-action {
+    background: var(--teal-light); color: var(--teal-dark);
+    border: 1.5px solid var(--teal); border-radius: 6px;
+    padding: 5px 12px; font-size: 12px; font-weight: 600;
+    cursor: pointer; transition: all .12s;
+  }
+  .tbl-action:hover { background: var(--teal); color: #fff; }
+  .tbl-search {
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 8px 14px; font-size: 13px; width: 220px; outline: none;
+  }
+  .tbl-search:focus { border-color: var(--teal); }
+  .tbl-filter {
+    border: 1.5px solid var(--border); border-radius: 8px;
+    padding: 8px 32px 8px 12px; font-size: 13px; outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+    cursor: pointer;
+  }
+
+  /* Admin payslip editor */
+  .edit-form { padding: 20px; }
+  .edit-section-title {
+    font-size: 11px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--teal-dark);
+    margin: 20px 0 12px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--teal-light);
+  }
+  .edit-row { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-bottom: 10px; align-items: end; }
+  .edit-input {
+    border: 1.5px solid var(--border); border-radius: 7px;
+    padding: 8px 12px; font-size: 13px; outline: none;
+    transition: border-color .12s; width: 100%;
+  }
+  .edit-input:focus { border-color: var(--teal); }
+  .edit-remove {
+    background: var(--red-bg); color: var(--red);
+    border: none; border-radius: 6px; padding: 8px 12px;
+    font-size: 13px; cursor: pointer; transition: background .12s;
+  }
+  .edit-remove:hover { background: var(--red); color: #fff; }
+  .edit-add-btn {
+    background: none; border: 1.5px dashed var(--teal);
+    border-radius: 7px; padding: 9px 16px;
+    font-size: 13px; font-weight: 600; color: var(--teal-dark);
+    cursor: pointer; transition: all .12s; width: 100%; margin-bottom: 6px;
+  }
+  .edit-add-btn:hover { background: var(--teal-light); }
+  .publish-btn {
+    background: var(--teal-dark); color: #fff;
+    border: none; border-radius: 8px; padding: 12px 24px;
+    font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: background .15s; display: flex; align-items: center; gap: 8px;
+  }
+  .publish-btn:hover { background: var(--teal); }
+  .verify-overlay {
+    display: none; position: fixed; inset: 0; z-index: 500;
+    background: rgba(0,0,0,.5); align-items: center; justify-content: center;
+  }
+  .verify-overlay.open { display: flex; }
+  .verify-modal {
+    background: var(--white); border-radius: var(--radius);
+    padding: 36px 40px; max-width: 420px; width: 90%;
+    box-shadow: var(--shadow-lg);
+  }
+  .vm-title { font-size: 20px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .vm-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; }
+  .vm-success { display: none; text-align: center; padding: 16px 0; }
+  .vm-success-icon { font-size: 48px; margin-bottom: 12px; }
+  .vm-success-title { font-size: 18px; font-weight: 700; color: var(--green); margin-bottom: 6px; }
+  .vm-success-sub { font-size: 13px; color: var(--muted); }
+
+  /* Section tabs */
+  .section-tabs {
+    display: flex; gap: 4px; margin-bottom: 18px;
+    border-bottom: 2px solid var(--border); padding-bottom: 0;
+  }
+  .stab {
+    background: none; border: none; border-bottom: 2px solid transparent;
+    padding: 8px 16px; font-size: 13px; font-weight: 600;
+    color: var(--muted); cursor: pointer; margin-bottom: -2px;
+    transition: all .15s;
+  }
+  .stab.active { color: var(--teal-dark); border-bottom-color: var(--teal-dark); }
+  .stab-pane { display: none; }
+  .stab-pane.active { display: block; }
+
+  /* Toast */
+  .toast {
+    position: fixed; bottom: 28px; right: 28px; z-index: 9999;
+    background: var(--navy); color: #fff;
+    border-radius: 10px; padding: 14px 20px;
+    font-size: 14px; font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(20px); opacity: 0;
+    transition: all .25s; pointer-events: none;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { border-left: 4px solid #22C55E; }
+  .toast.error { border-left: 4px solid #F97316; }
+
+  /* Util */
+  .flex-between { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+  .flex-gap { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .section-heading { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin: 22px 0 10px; }
+  .text-muted { color: var(--muted); }
+  .mb-0 { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+     PAGE 1: HOMEPAGE
+════════════════════════════════════════════ -->
+<div class="page-screen flex active" id="pg-home">
+  <header class="home-header">
+    <div class="brand">
+      <div class="brand-logo">SM</div>
+      <div class="brand-name">
+        Sisters of Mary School–Adlas, Inc.
+        <span>Salary Information &amp; Transparency Portal</span>
+      </div>
+    </div>
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('fil')">FIL</button>
+    </div>
+  </header>
+
+  <section class="home-hero">
+    <div class="hero-eyebrow" data-en="Employee Self-Service" data-fil="Serbisyo para sa Empleyado">Employee Self-Service</div>
+    <h1 class="hero-title">Your salary,<br><em>fully transparent.</em></h1>
+    <p class="hero-subtitle" data-en="View your official payslip, understand every deduction, and track payroll history — securely, anytime." data-fil="Tingnan ang inyong opisyal na payslip, unawain ang bawat bawas, at subaybayan ang kasaysayan ng sahod — nang ligtas, anumang oras.">View your official payslip, understand every deduction, and track payroll history — securely, anytime.</p>
+    <div class="hero-notice">
+      🔒 <strong data-en="Transparency Portal only" data-fil="Transparency Portal lamang">Transparency Portal only</strong>
+      <span data-en="— not a payment or e-wallet system." data-fil="— hindi isang sistema ng pagbabayad o e-wallet.">— not a payment or e-wallet system.</span>
+    </div>
+  </section>
+
+  <div class="portal-section">
+    <div class="portal-section-title" data-en="Select your account type" data-fil="Piliin ang uri ng inyong account">Select your account type</div>
+    <div class="portal-cards">
+
+      <div class="portal-card" onclick="goto('pg-tp-login')">
+        <div class="pc-icon">🎓</div>
+        <div class="pc-title" data-en="Teaching Personnel" data-fil="Mga Guro">Teaching Personnel</div>
+        <div class="pc-desc" data-en="Faculty members access their personal payslip and payroll records here." data-fil="Ang mga miyembro ng faculty ay nag-aaccess ng kanilang personal na payslip at rekord ng sahod dito.">Faculty members access their personal payslip and payroll records here.</div>
+        <button class="pc-action" onclick="goto('pg-tp-login')">
+          <span data-en="Faculty Login" data-fil="Login ng Guro">Faculty Login</span> →
+        </button>
+      </div>
+
+      <div class="portal-card" onclick="goto('pg-ntp-login')">
+        <div class="pc-icon">🏢</div>
+        <div class="pc-title" data-en="Non-Teaching Personnel" data-fil="Di-Nagtuturo na Kawani">Non-Teaching Personnel</div>
+        <div class="pc-desc" data-en="Administrative and support staff access their personal payslip and payroll records here." data-fil="Ang administratibo at suporta ng kawani ay nag-aaccess ng kanilang personal na payslip at rekord ng sahod dito.">Administrative and support staff access their personal payslip and payroll records here.</div>
+        <button class="pc-action" onclick="goto('pg-ntp-login')">
+          <span data-en="NTP Login" data-fil="Login ng NTP">NTP Login</span> →
+        </button>
+      </div>
+
+      <div class="portal-card admin-card" onclick="goto('pg-admin-login')">
+        <div class="pc-icon" style="background:rgba(255,255,255,.1)">⚙️</div>
+        <div class="pc-title">Accounting / Admin</div>
+        <div class="pc-desc" data-en="Authorized accounting staff publish payslips and manage payroll records." data-fil="Ang awtorisadong accounting staff ay nagpo-publish ng mga payslip at namamahala ng mga rekord ng sahod.">Authorized accounting staff publish payslips and manage payroll records.</div>
+        <button class="pc-action" onclick="goto('pg-admin-login')">
+          <span data-en="Admin Login" data-fil="Login ng Admin">Admin Login</span> →
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="feature-strip">
+    <div class="feature-strip-inner">
+      <div class="feature-item"><span>🔐</span> <span data-en="Secure Login" data-fil="Ligtas na Login">Secure Login</span></div>
+      <div class="feature-item"><span>📄</span> <span data-en="Official E-Payslip" data-fil="Opisyal na E-Payslip">Official E-Payslip</span></div>
+      <div class="feature-item"><span>🔍</span> <span data-en="Deduction Evidence" data-fil="Ebidensya ng Bawas">Deduction Evidence</span></div>
+      <div class="feature-item"><span>🌐</span> <span data-en="English / Filipino" data-fil="Ingles / Filipino">English / Filipino</span></div>
+      <div class="feature-item"><span>📊</span> <span data-en="Payroll History" data-fil="Kasaysayan ng Sahod">Payroll History</span></div>
+      <div class="feature-item"><span>✅</span> <span data-en="Digital Signatures" data-fil="Digital na Lagda">Digital Signatures</span></div>
+    </div>
+  </div>
+
+  <footer class="home-footer">
+    Sisters of Mary School–Adlas, Inc. · SITP v1.0 · Grade 12 AI Academy Capstone · Rotary Club of Makati
+  </footer>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 2A: TEACHING PERSONNEL LOGIN
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-tp-login">
+  <div class="login-layout">
+    <div class="login-panel-left">
+      <button class="back-btn" onclick="goto('pg-home')">← Back to Home</button>
+      <div class="lpl-eyebrow">Teaching Personnel</div>
+      <div class="lpl-title">Welcome back,<br>Faculty.</div>
+      <div class="lpl-desc">Your personal payslip and payroll history are waiting. Log in securely to view your salary information.</div>
+      <div class="lpl-badge">🔒 Secure · Private · TP-only access</div>
+    </div>
+    <div class="login-panel-right">
+      <div class="login-form-title">Faculty Login</div>
+      <div class="login-form-sub" data-en="Sisters of Mary School–Adlas, Inc." data-fil="Sisters of Mary School–Adlas, Inc.">Sisters of Mary School–Adlas, Inc.</div>
+      <div class="form-error" id="tp-login-error" style="display: none;">Incorrect email or password. Please try again.</div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="tp-empid" type="email" placeholder="e.g. juan.delacruz@somschool.edu.ph">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="tp-pw" type="password" placeholder="Enter your password">
+      </div>
+      <button class="form-btn" onclick="doLogin('tp')">Sign In →</button>
+      <button class="form-btn secondary" onclick="goto('pg-home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 2B: NON-TEACHING PERSONNEL LOGIN
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-ntp-login">
+  <div class="login-layout">
+    <div class="login-panel-left" style="background:linear-gradient(155deg,var(--navy) 0%,#3D6B00 100%)">
+      <button class="back-btn" onclick="goto('pg-home')">← Back to Home</button>
+      <div class="lpl-eyebrow">Non-Teaching Personnel</div>
+      <div class="lpl-title">Welcome back,<br>Staff.</div>
+      <div class="lpl-desc">Your personal payslip and payroll history are waiting. Log in securely to view your salary information.</div>
+      <div class="lpl-badge">🔒 Secure · Private · NTP-only access</div>
+    </div>
+    <div class="login-panel-right">
+      <div class="login-form-title">NTP Login</div>
+      <div class="login-form-sub">Sisters of Mary School–Adlas, Inc.</div>
+      <div class="form-error" id="ntp-login-error" style="display: none;">Incorrect email or password. Please try again.</div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="ntp-empid" type="email" placeholder="e.g. maria.santos@somschool.edu.ph">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="ntp-pw" type="password" placeholder="Enter your password">
+      </div>
+      <button class="form-btn" onclick="doLogin('ntp')">Sign In →</button>
+      <button class="form-btn secondary" onclick="goto('pg-home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 2C: ADMIN LOGIN
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-admin-login">
+  <div class="login-layout">
+    <div class="login-panel-left" style="background:linear-gradient(155deg,#071A30 0%,var(--teal-dark) 100%)">
+      <button class="back-btn" onclick="goto('pg-home')">← Back to Home</button>
+      <div class="lpl-eyebrow">Accounting / Admin</div>
+      <div class="lpl-title">Accountant<br>Access.</div>
+      <div class="lpl-desc">Authorized accounting personnel only. You can publish payslips, edit payroll records, and manage employee salary data.</div>
+      <div class="lpl-badge">🔐 Restricted · Accounting Office only</div>
+    </div>
+    <div class="login-panel-right">
+      <div class="login-form-title">Admin Login</div>
+      <div class="login-form-sub">Sisters of Mary School–Adlas, Inc. · Accounting</div>
+      <div class="form-error" id="admin-login-error" style="display: none;">Incorrect email or password. Authorized personnel only.</div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" id="admin-id" type="email" placeholder="e.g. accounting@somschool.edu.ph">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" id="admin-pw" type="password" placeholder="Enter your password">
+      </div>
+      <button class="form-btn" onclick="doLogin('admin')">Sign In →</button>
+      <button class="form-btn secondary" onclick="goto('pg-home')">← Back to Home</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 3: SECURITY VERIFICATION (OTP)
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-otp">
+  <div class="login-layout">
+    <div class="login-panel-left" id="otp-panel-left">
+      <button class="back-btn" onclick="goto(window.otpReturnTo)">← Back</button>
+      <div class="lpl-eyebrow">Security Verification</div>
+      <div class="lpl-title">One more step.</div>
+      <div class="lpl-desc">We sent a 6-digit code to your registered contact. Enter it to confirm it's really you.</div>
+      <div class="lpl-badge">🛡 Two-factor verification required by SMSAI policy</div>
+    </div>
+    <div class="login-panel-right">
+      <div class="login-form-title">Security Verification</div>
+      <div class="login-form-sub">Enter the 6-digit code sent to your registered contact.</div>
+      <div class="otp-note">For this demo, use code: <strong>123456</strong></div>
+      <div class="otp-grid" id="otp-grid"></div>
+      <div class="form-error" id="otp-error" style="display: none;">Incorrect code. Please try again. (Demo: 123456)</div>
+      <button class="form-btn" onclick="verifyOtp()">Verify &amp; Continue →</button>
+      <button class="form-btn secondary" onclick="goto(window.otpReturnTo)">← Back to Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 4: EMPLOYEE DASHBOARD (TP / NTP)
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-emp-dash">
+  <div class="dash-layout">
+    <!-- Sidebar -->
+    <nav class="dash-sidebar">
+      <div class="sidebar-brand">
+        <div class="sb-logo">SM</div>
+        <div class="sb-name">Sisters of Mary School–Adlas, Inc.</div>
+        <div class="sb-role" id="dash-role-badge">Teaching Personnel</div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-label">My Account</div>
+        <button class="nav-item active" onclick="showEmpTab('payslip',this)">
+          <span class="ni-icon">📄</span> My Payslip
+        </button>
+        <button class="nav-item" onclick="showEmpTab('history',this)">
+          <span class="ni-icon">📊</span> Payroll History
+        </button>
+        <button class="nav-item" onclick="showEmpTab('breakdown',this)">
+          <span class="ni-icon">🔍</span> Salary Breakdown
+        </button>
+        <div class="nav-section-label">Information</div>
+        <button class="nav-item" onclick="showEmpTab('govcontrib',this)">
+          <span class="ni-icon">🛡️</span> About Deductions
+        </button>
+        <button class="nav-item" onclick="showEmpTab('faq',this)">
+          <span class="ni-icon">❓</span> FAQ &amp; Policies
+        </button>
+        <div class="nav-section-label">Settings</div>
+        <button class="nav-item" onclick="showEmpTab('profile',this)">
+          <span class="ni-icon">👤</span> My Profile
+        </button>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="su-avatar" id="dash-avatar">MS</div>
+          <div>
+            <div class="su-name" id="dash-name">Maria Santos</div>
+            <div class="su-dept" id="dash-dept">Math Department</div>
+          </div>
+          <button class="su-logout" onclick="doLogout()" title="Logout">⏻</button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <main class="dash-main">
+      <div class="dash-topbar">
+        <div class="dash-page-title" id="dash-page-title">My Payslip</div>
+        <div class="topbar-right">
+          <div class="topbar-lang">
+            <button class="active" onclick="setLang('en')">EN</button>
+            <button onclick="setLang('fil')">FIL</button>
+          </div>
+          <div class="pub-tag">✓ Published</div>
+        </div>
+      </div>
+
+      <div class="dash-content">
+
+        <!-- ── TAB: PAYSLIP ── -->
+        <div id="emp-tab-payslip" class="stab-pane active">
+
+          <div class="emp-pub-notice">
+            <div class="epn-icon">📋</div>
+            <div class="epn-body">
+              <div class="epn-title" data-en="Publication Details" data-fil="Detalye ng Publikasyon">Publication Details</div>
+              <div class="epn-meta">
+                <span data-en="Payroll Period:" data-fil="Panahon ng Sahod:">Payroll Period:</span>
+                <strong> June 1–15, 2026</strong> &nbsp;·&nbsp;
+                <span data-en="Published:" data-fil="Inilathala:">Published:</span>
+                <strong> June 16, 2026</strong> &nbsp;·&nbsp;
+                <span data-en="Released by:" data-fil="Inilabas ni:">Released by:</span>
+                <strong> Accounting Office</strong>
+              </div>
+            </div>
+            <div class="epn-badge">✓ <span data-en="Published" data-fil="Inilathala">Published</span></div>
+          </div>
+
+          <div class="flex-between" style="margin-bottom:18px">
+            <div>
+              <div style="font-size:18px;font-weight:800;color:var(--navy)" data-en="My Payslip" data-fil="Aking Payslip">My Payslip</div>
+              <div style="font-size:13px;color:var(--muted)" id="period-label-emp">June 1–15, 2026 · Pay Date: June 16, 2026</div>
+            </div>
+            <div class="flex-gap">
+              <select class="tbl-filter" onchange="loadEmpPeriod(this.value)" style="min-width:195px">
+                <option value="jun1" selected="">June 1–15, 2026</option>
+                <option value="jun2">June 16–30, 2026</option>
+                <option value="may2">May 16–31, 2026</option>
+                <option value="may1">May 1–15, 2026</option>
+              </select>
+              <button class="dc-head-action" onclick="window.print()">⬇ Download</button>
+            </div>
+          </div>
+
+          <div class="summary-grid">
+            <div class="sum-card">
+              <div class="sum-label" data-en="Gross Pay" data-fil="Kabuuang Kita">Gross Pay</div>
+              <div class="sum-val" id="e-gross">₱14,450.00</div>
+              <div class="sum-sub" data-en="Total earnings" data-fil="Kabuuang kita">Total earnings</div>
+            </div>
+            <div class="sum-card">
+              <div class="sum-label" data-en="Deductions" data-fil="Mga Bawas">Deductions</div>
+              <div class="sum-val" id="e-deduct" style="color:var(--red)">₱3,993.00</div>
+              <div class="sum-sub" data-en="Net deductions" data-fil="Netong bawas">Net deductions</div>
+            </div>
+            <div class="sum-card net-card">
+              <div class="sum-label" data-en="Net Pay" data-fil="Netong Sahod">Net Pay</div>
+              <div class="sum-val" id="e-net">₱11,257.00</div>
+              <div class="sum-sub" id="e-net-sub">Take-home · June 16, 2026</div>
+            </div>
+          </div>
+
+          <!-- Payslip body -->
+          <div class="dash-card" id="payslip-main"></div>
+
+        </div>
+
+        <!-- ── TAB: HISTORY ── -->
+        <div id="emp-tab-history" class="stab-pane">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px" data-en="Payroll History" data-fil="Kasaysayan ng Sahod">Payroll History</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:18px" data-en="All your published payslips" data-fil="Lahat ng inyong na-publish na payslip">All your published payslips</div>
+          <div class="dash-card">
+            <div class="dc-head"><span class="dc-head-title" data-en="Past Payslips" data-fil="Mga Nakaraang Payslip">Past Payslips</span></div>
+            <div id="emp-history-rows"></div>
+          </div>
+        </div>
+
+        <!-- ── TAB: BREAKDOWN ── -->
+        <div id="emp-tab-breakdown" class="stab-pane">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px" data-en="Salary Breakdown" data-fil="Breakdown ng Sahod">Salary Breakdown</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:18px" data-en="Understanding how your salary is composed" data-fil="Pag-unawa kung paano binubuo ang inyong sahod">Understanding how your salary is composed</div>
+          <div class="dash-card">
+            <div class="dc-head"><span class="dc-head-title" data-en="Salary Composition" data-fil="Komposisyon ng Sahod">Salary Composition</span></div>
+            <div style="padding:20px" id="breakdown-bars"></div>
+          </div>
+        </div>
+
+        <!-- ── TAB: GOV CONTRIBUTIONS ── -->
+        <div id="emp-tab-govcontrib" class="stab-pane">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px" data-en="About Your Deductions" data-fil="Tungkol sa Inyong mga Bawas">About Your Deductions</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:18px" data-en="Government contributions are mandatory and benefit you." data-fil="Ang mga kontribusyon ng gobyerno ay mandatoryo at para sa inyong kapakinabangan.">Government contributions are mandatory and benefit you.</div>
+          <div class="gov-grid">
+            <div class="gov-card">
+              <div class="gov-icon">🛡️</div>
+              <div class="gov-name">SSS</div>
+              <div class="gov-tag" data-en="Social Security System" data-fil="Sistema ng Seguridad Panlipunan">Social Security System</div>
+              <div class="gov-desc" data-en="Mandatory government insurance. Funds retirement, disability, maternity, and death benefits for you and your family." data-fil="Mandatoryong seguro ng gobyerno. Nagtatayo ng pondo para sa pensyon, kapansanan, maternity, at kamatayan para sa inyo at sa inyong pamilya.">Mandatory government insurance. Funds retirement, disability, maternity, and death benefits for you and your family.</div>
+              <hr class="gov-divider">
+              <div class="gov-benefit" data-en="✓ Your contributions build your SSS account" data-fil="✓ Nagtatayo ng inyong SSS account ang inyong kontribusyon">✓ Your contributions build your SSS account</div>
+            </div>
+            <div class="gov-card">
+              <div class="gov-icon">🏥</div>
+              <div class="gov-name">PhilHealth</div>
+              <div class="gov-tag" data-en="National Health Insurance" data-fil="Pambansang Seguro sa Kalusugan">National Health Insurance</div>
+              <div class="gov-desc" data-en="Covers hospital care, outpatient visits, and certain medications for you and dependents. The school matches your contribution." data-fil="Sumasaklaw sa pag-aalaga sa ospital, outpatient, at ilang gamot para sa inyo at mga dependent. Tinutumbasan ng paaralan ang inyong kontribusyon.">Covers hospital care, outpatient visits, and certain medications for you and dependents. The school matches your contribution.</div>
+              <hr class="gov-divider">
+              <div class="gov-benefit" data-en="✓ You and dependents get health coverage" data-fil="✓ Ikaw at ang mga dependent ay may saklaw sa kalusugan">✓ You and dependents get health coverage</div>
+            </div>
+            <div class="gov-card">
+              <div class="gov-icon">🏠</div>
+              <div class="gov-name">PAG-IBIG</div>
+              <div class="gov-tag" data-en="Home Development Mutual Fund" data-fil="Pondo ng Pagtatayo ng Bahay">Home Development Mutual Fund</div>
+              <div class="gov-desc" data-en="A housing and savings fund. Earns annual dividends and makes you eligible for low-cost housing loans." data-fil="Isang housing at savings fund. Kumikita ng taunang dibidendo at ginagawa kang karapat-dapat para sa murang pautang para sa bahay.">A housing and savings fund. Earns annual dividends and makes you eligible for low-cost housing loans.</div>
+              <hr class="gov-divider">
+              <div class="gov-benefit" data-en="✓ Housing loans &amp; annual dividends" data-fil="✓ Pautang sa bahay at taunang dibidendo">✓ Housing loans &amp; annual dividends</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TAB: FAQ ── -->
+        <div id="emp-tab-faq" class="stab-pane">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px" data-en="Payroll FAQ &amp; Policies" data-fil="FAQ at Patakaran sa Sahod">Payroll FAQ &amp; Policies</div>
+          <div style="font-size:13px;color:var(--muted);margin-bottom:18px" data-en="Answers to the most common payroll questions." data-fil="Mga sagot sa pinakakaraniwang tanong sa sahod.">Answers to the most common payroll questions.</div>
+          <div class="section-tabs">
+            <button class="stab active" onclick="switchSTab('faq-en',this)">English</button>
+            <button class="stab" onclick="switchSTab('faq-fil',this)">Filipino</button>
+          </div>
+          <div id="faq-en" class="stab-pane active">
+            <div class="dash-card">
+              <div id="faq-en-items"></div>
+            </div>
+          </div>
+          <div id="faq-fil" class="stab-pane">
+            <div class="dash-card">
+              <div id="faq-fil-items"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── TAB: PROFILE ── -->
+        <div id="emp-tab-profile" class="stab-pane">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:18px" data-en="My Profile" data-fil="Aking Profile">My Profile</div>
+          <div class="dash-card" style="max-width:480px">
+            <div class="dc-head"><span class="dc-head-title" data-en="Account Information" data-fil="Impormasyon ng Account">Account Information</span></div>
+            <div style="padding:20px">
+              <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="prof-name" value="Maria Santos" readonly=""></div>
+              <div class="form-group"><label class="form-label">Employee ID</label><input class="form-input" value="SOM-2018-047" readonly=""></div>
+              <div class="form-group"><label class="form-label">Department</label><input class="form-input" id="prof-dept" value="Math Department" readonly=""></div>
+              <div class="form-group"><label class="form-label">Personnel Type</label><input class="form-input" id="prof-type" value="Teaching Personnel" readonly=""></div>
+              <div class="form-group"><label class="form-label">Change Password</label><input class="form-input" id="change-pw-input" type="password" placeholder="Enter new password"></div>
+              <button class="form-btn" onclick="saveProfileChanges()" style="margin-top:4px">Save Changes</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /dash-content -->
+    </main>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE 5: ADMIN DASHBOARD
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-admin-dash">
+  <div class="dash-layout">
+    <nav class="dash-sidebar">
+      <div class="sidebar-brand">
+        <div class="sb-logo">SM</div>
+        <div class="sb-name">Sisters of Mary School–Adlas, Inc.</div>
+        <div class="sb-role" style="background:var(--gold)">Accounting Office</div>
+      </div>
+      <div class="sidebar-nav">
+        <div class="nav-section-label">Dashboard</div>
+        <button class="nav-item" onclick="showAdminTab('overview',this)">
+          <span class="ni-icon">📊</span> Overview
+        </button>
+        <div class="nav-section-label">Teaching Personnel</div>
+        <button class="nav-item" onclick="showAdminTab('tp-list',this)">
+          <span class="ni-icon">🎓</span> TP Employee List
+        </button>
+        <div class="nav-section-label">Non-Teaching Personnel</div>
+        <button class="nav-item" onclick="showAdminTab('ntp-list',this)">
+          <span class="ni-icon">🏢</span> NTP Employee List
+        </button>
+        <div class="nav-section-label">Management</div>
+        <button class="nav-item active" onclick="showAdminTab('audit',this)">
+          <span class="ni-icon">🗂️</span> Audit Log
+        </button>
+        <button class="nav-item" onclick="showAdminTab('announcements',this)">
+          <span class="ni-icon">📢</span> Announcements
+        </button>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="su-avatar" style="background:var(--gold);color:var(--navy)">RD</div>
+          <div>
+            <div class="su-name">Ms. R. Dela Cruz</div>
+            <div class="su-dept">Accountant</div>
+          </div>
+          <button class="su-logout" onclick="doLogout()" title="Logout">⏻</button>
+        </div>
+      </div>
+    </nav>
+
+    <main class="dash-main">
+      <div class="dash-topbar">
+        <div class="dash-page-title" id="admin-page-title">Audit Log</div>
+        <div class="topbar-right">
+          <button class="dc-head-action" onclick="showToast('Payroll period: June 16–30, 2026 set.','success')">+ New Payroll Period</button>
+        </div>
+      </div>
+
+      <div class="dash-content">
+
+        <!-- OVERVIEW -->
+        <div id="admin-tab-overview" class="stab-pane">
+          <div class="admin-stat-grid">
+            <div class="admin-stat">
+              <div class="as-label">Teaching Personnel</div>
+              <div class="as-val teal">24</div>
+              <div class="as-sub">Active faculty</div>
+            </div>
+            <div class="admin-stat">
+              <div class="as-label">Non-Teaching Personnel</div>
+              <div class="as-val teal">18</div>
+              <div class="as-sub">Active staff</div>
+            </div>
+            <div class="admin-stat">
+              <div class="as-label">Payslips Published</div>
+              <div class="as-val green">42</div>
+              <div class="as-sub">June 1–15, 2026</div>
+            </div>
+            <div class="admin-stat">
+              <div class="as-label">Pending Publication</div>
+              <div class="as-val amber">0</div>
+              <div class="as-sub">All current published</div>
+            </div>
+          </div>
+          <div class="dash-card">
+            <div class="dc-head">
+              <span class="dc-head-title">Recent Activity</span>
+              <span style="font-size:12px;color:var(--muted)">June 2026</span>
+            </div>
+            <div id="admin-activity-list"></div>
+          </div>
+        </div>
+
+        <!-- TP LIST -->
+        <div id="admin-tab-tp-list" class="stab-pane">
+          <div class="flex-between" style="margin-bottom:16px">
+            <div style="font-size:18px;font-weight:800;color:var(--navy)">Teaching Personnel</div>
+            <div class="flex-gap">
+              <input class="tbl-search" placeholder="Search by name or ID…" oninput="filterTable('tp-table',this.value)">
+              <select class="tbl-filter" onchange="filterByStatus('tp-table',this.value)">
+                <option value="">All Status</option>
+                <option value="Published">Published</option>
+                <option value="Draft">Draft</option>
+              </select>
+            </div>
+          </div>
+          <div class="dash-card">
+            <table class="emp-table" id="tp-table">
+              <thead><tr>
+                <th>Employee</th><th>Department</th><th>Period</th>
+                <th>Net Pay</th><th>Status</th><th>Action</th>
+              </tr></thead>
+              <tbody id="tp-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- NTP LIST -->
+        <div id="admin-tab-ntp-list" class="stab-pane">
+          <div class="flex-between" style="margin-bottom:16px">
+            <div style="font-size:18px;font-weight:800;color:var(--navy)">Non-Teaching Personnel</div>
+            <div class="flex-gap">
+              <input class="tbl-search" placeholder="Search by name or ID…" oninput="filterTable('ntp-table',this.value)">
+            </div>
+          </div>
+          <div class="dash-card">
+            <table class="emp-table" id="ntp-table">
+              <thead><tr>
+                <th>Employee</th><th>Department</th><th>Period</th>
+                <th>Net Pay</th><th>Status</th><th>Action</th>
+              </tr></thead>
+              <tbody id="ntp-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- AUDIT LOG -->
+        <div id="admin-tab-audit" class="stab-pane active">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:18px">Audit Log</div>
+          <div class="dash-card">
+            <div class="dc-head"><span class="dc-head-title">System Activity Log</span></div>
+            <div id="audit-list"></div>
+          </div>
+        </div>
+
+        <!-- ANNOUNCEMENTS -->
+        <div id="admin-tab-announcements" class="stab-pane">
+          <div style="font-size:18px;font-weight:800;color:var(--navy);margin-bottom:18px">Announcements</div>
+          <div class="dash-card" style="max-width:600px">
+            <div class="dc-head"><span class="dc-head-title">Post Announcement</span></div>
+            <div style="padding:20px">
+              <div class="form-group"><label class="form-label">Title</label><input class="form-input" id="ann-title" placeholder="e.g. June 16–30 payslips now available"></div>
+              <div class="form-group"><label class="form-label">Message</label><textarea class="form-input" rows="4" id="ann-body" placeholder="Enter announcement text…"></textarea></div>
+              <div class="form-group">
+                <label class="form-label">Target</label>
+                <select class="form-input"><option>All Personnel</option><option>Teaching Personnel Only</option><option>Non-Teaching Personnel Only</option></select>
+              </div>
+              <button class="form-btn" onclick="showToast('Announcement posted.','success')">Post Announcement</button>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /dash-content -->
+    </main>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAYSLIP EDITOR (Admin → Edit Employee)
+════════════════════════════════════════════ -->
+<div class="page-screen flex" id="pg-admin-edit">
+  <div class="dash-layout">
+    <nav class="dash-sidebar">
+      <div class="sidebar-brand">
+        <div class="sb-logo">SM</div>
+        <div class="sb-name">Sisters of Mary School–Adlas, Inc.</div>
+        <div class="sb-role" style="background:var(--gold)">Accounting Office</div>
+      </div>
+      <div class="sidebar-nav">
+        <button class="nav-item" onclick="goto('pg-admin-dash')">
+          <span class="ni-icon">←</span> Back to List
+        </button>
+        <button class="nav-item active">
+          <span class="ni-icon">✏️</span> Edit Payslip
+        </button>
+      </div>
+      <div class="sidebar-bottom">
+        <div class="sidebar-user">
+          <div class="su-avatar" style="background:var(--gold);color:var(--navy)">RD</div>
+          <div>
+            <div class="su-name">Ms. R. Dela Cruz</div>
+            <div class="su-dept">Accountant</div>
+          </div>
+          <button class="su-logout" onclick="doLogout()" title="Logout">⏻</button>
+        </div>
+      </div>
+    </nav>
+    <main class="dash-main">
+      <div class="dash-topbar">
+        <div class="dash-page-title" id="edit-page-title">Edit Payslip</div>
+        <div class="topbar-right">
+          <button class="publish-btn" onclick="openVerifyModal()">
+            📤 <span data-en="Publish Payslip" data-fil="I-publish ang Payslip">Publish Payslip</span>
+          </button>
+        </div>
+      </div>
+      <div class="dash-content">
+        <div class="dash-card">
+          <div class="dc-head">
+            <span class="dc-head-title" id="edit-emp-label">Employee Label</span>
+            <span style="font-size:12px;color:var(--muted)">June 1–15, 2026</span>
+          </div>
+          <div class="edit-form">
+            <div class="edit-section-title">EARNINGS</div>
+            <div id="edit-earnings-rows"></div>
+            <button class="edit-add-btn" onclick="addEditRow('earnings')">+ Add Earning Line</button>
+            <div class="edit-section-title">DEDUCTIONS</div>
+            <div id="edit-deductions-rows"></div>
+            <button class="edit-add-btn" onclick="addEditRow('deductions')">+ Add Deduction Line</button>
+            <div class="edit-section-title">PAY COMPUTATION</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+              <div><label class="form-label">Taxable Income</label><input class="form-input" id="edit-taxable" type="number" placeholder="0.00"></div>
+              <div><label class="form-label">Gross Pay</label><input class="form-input" id="edit-gross" type="number" placeholder="0.00"></div>
+            </div>
+            <div style="background:var(--teal-light);border-radius:8px;padding:14px 18px;font-size:14px;color:var(--teal-dark);margin-bottom:16px">
+              <strong>Computed Net Pay: </strong><span id="edit-net-preview">₱0.00</span>
+            </div>
+            <div class="edit-section-title">DEDUCTION EVIDENCE NOTES</div>
+            <div class="form-group">
+              <label class="form-label">Attendance Record Note</label>
+              <textarea class="form-input" rows="2" placeholder="e.g. Absent May 14, 2026 — no approved leave on record…"></textarea>
+            </div>
+            <button class="form-btn" style="width:auto;padding:10px 24px;margin-top:8px" onclick="showToast('Draft saved.','success')">💾 Save Draft</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- VERIFY MODAL -->
+<div class="verify-overlay" id="verify-modal">
+  <div class="verify-modal">
+    <div id="vm-form">
+      <div class="vm-title">Verify &amp; Publish</div>
+      <div class="vm-sub">As the authorized accountant, enter your PIN to publish this payslip to the employee's dashboard.</div>
+      <div class="otp-note">Demo PIN: <strong>4321</strong></div>
+      <div class="otp-grid" id="vm-otp-grid"></div>
+      <div class="form-error" id="vm-error" style="margin-bottom: 12px; display: none;">Incorrect PIN. Try again. (Demo: 4321)</div>
+      <button class="form-btn" onclick="verifyPublish()">Confirm &amp; Publish →</button>
+      <button class="form-btn secondary" onclick="closeVerifyModal()">Cancel</button>
+    </div>
+    <div class="vm-success" id="vm-success" style="display: none;">
+      <div class="vm-success-icon">✅</div>
+      <div class="vm-success-title">Payslip Published!</div>
+      <div class="vm-success-sub">The payslip is now visible on the employee's dashboard. Reference: SMSAI-2026-00124</div>
+      <button class="form-btn" style="margin-top:20px" onclick="closeVerifyModal();goto('pg-admin-dash')">Back to Dashboard</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast success" id="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-msg">Success</span>
+</div>
+
+<!-- Supabase CDN and Main Portal Runtime Loader -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script type="module" src="/src/portal.js"></script>
+
+</body>
+</html>
